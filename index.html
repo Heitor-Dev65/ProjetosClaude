@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Dinheiro — Controle Financeiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+
+<div class="app">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M2 9H22" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="6" cy="14.5" r="1.1" fill="currentColor"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-title">Meu Dinheiro</span>
+        <span class="brand-sub">livro-caixa pessoal</span>
+      </div>
+    </div>
+
+    <div class="profile-switcher">
+      <svg class="profile-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 19.5c1.4-3.4 4.2-5.2 7.5-5.2s6.1 1.8 7.5 5.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <select id="profileSelect" class="input" aria-label="Selecionar perfil"></select>
+      <button id="profileAdd" class="icon-btn icon-btn-sm" title="Novo perfil" aria-label="Novo perfil">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button id="profileRename" class="icon-btn icon-btn-sm" title="Renomear perfil" aria-label="Renomear perfil">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4L18.5 9.5a2 2 0 0 0 0-2.8l-1.2-1.2a2 2 0 0 0-2.8 0L4 16v4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="profileDelete" class="icon-btn icon-btn-sm" title="Excluir perfil" aria-label="Excluir perfil">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 7h14M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 .9h6a1 1 0 0 0 1-.9L18 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <button id="backupBtn" class="icon-btn" title="Backup e restauração" aria-label="Backup e restauração">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A5.5 5.5 0 0 1 17.4 8.06 4 4 0 0 1 17 16H7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v6M9.5 14.5 12 17l2.5-2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <button id="themeToggle" class="icon-btn" title="Alternar tema" aria-label="Alternar tema claro/escuro">
+      <svg id="iconSun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M12 2.5V5M12 19V21.5M4.2 4.2L6 6M18 18L19.8 19.8M2.5 12H5M19 12H21.5M4.2 19.8L6 18M18 6L19.8 4.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <svg id="iconMoon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Navegação -->
+  <nav class="tabs" aria-label="Navegação principal">
+    <button class="tab active" data-view="painel">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M9 10v10" stroke="currentColor" stroke-width="1.6"/></svg>
+      Painel
+    </button>
+    <button class="tab" data-view="contas">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="12" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="14.5" r="1" fill="currentColor"/></svg>
+      Contas
+    </button>
+    <button class="tab" data-view="recorrentes">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="15" r="1.3" fill="currentColor"/><circle cx="12" cy="15" r="1.3" fill="currentColor"/><circle cx="16" cy="15" r="1.3" fill="currentColor"/></svg>
+      Recorrentes
+    </button>
+    <button class="tab" data-view="cartao">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="19" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 9.5h19" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 15h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Cartão
+    </button>
+    <button class="tab" data-view="metas">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>
+      Metas
+    </button>
+    <button class="tab" data-view="orcamento">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M12 13 15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9 4h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Orçamento
+    </button>
+    <button class="tab" data-view="insights">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 18h6M10 21h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 3a6.5 6.5 0 0 0-3.8 11.8c.5.4.8 1 .8 1.7v.5h6v-.5c0-.7.3-1.3.8-1.7A6.5 6.5 0 0 0 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      Insights
+    </button>
+    <button class="tab" data-view="resumo">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 2v4M16 2v4M3 10h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M8 14l2.5 2.5L16 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Resumo
+    </button>
+    <button class="tab" data-view="investimentos">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9M10 19V5M16 19v-7M4 19h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 5l4-1 1 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Investimentos
+    </button>
+  </nav>
+
+  <main class="content">
+
+   <div id="viewPainel" class="view">
+    <!-- Dashboard -->
+    <section class="dashboard" aria-label="Resumo">
+      <article class="card stat">
+        <div class="stat-label">
+          <svg class="stat-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M9 9.5c0-1 .9-1.8 3-1.8s3 .7 3 1.6c0 2.2-6 1.3-6 3.8 0 1 1 1.7 3 1.7s3-.6 3-1.6M12 6.7v1M12 15.6v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Patrimônio total
+        </div>
+        <div id="statPatrimonioTotal" class="stat-value">R$ 0,00</div>
+        <button type="button" id="toggleComposicaoBtn" class="stat-link">Ver composição <span id="composicaoChevron">▾</span></button>
+        <div class="stat-ledger-line"></div>
+      </article>
+      <article class="card stat">
+        <div class="stat-label">
+          <svg class="stat-icon" viewBox="0 0 24 24" fill="none"><path d="M4 8h11M11 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 16H9M13 12l-4 4 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Patrimônio líquido
+        </div>
+        <div id="statPatrimonioLiquido" class="stat-value">R$ 0,00</div>
+        <div class="stat-sub" id="statPatrimonioLiquidoSub"></div>
+        <div class="stat-ledger-line"></div>
+      </article>
+      <article class="card stat stat-income">
+        <div class="stat-label">
+          <span class="dot dot-income"></span> Receitas do mês
+        </div>
+        <div id="statReceitas" class="stat-value">R$ 0,00</div>
+        <div class="stat-ledger-line"></div>
+      </article>
+      <article class="card stat stat-expense">
+        <div class="stat-label">
+          <span class="dot dot-expense"></span> Despesas do mês
+        </div>
+        <div id="statDespesas" class="stat-value">R$ 0,00</div>
+        <div class="stat-ledger-line"></div>
+      </article>
+      <article class="card stat" id="statEconomiaCard">
+        <div class="stat-label">Economia do mês</div>
+        <div id="statEconomia" class="stat-value">R$ 0,00</div>
+        <div class="stat-ledger-line"></div>
+      </article>
+      <article class="card stat">
+        <div class="stat-label">% gasto da renda</div>
+        <div id="statPercentual" class="stat-value">0%</div>
+        <div class="stat-bar"><div id="statPercentualBar" class="stat-bar-fill"></div></div>
+      </article>
+    </section>
+
+    <section id="composicaoPanel" class="card composicao-panel" hidden aria-label="Composição do patrimônio">
+      <div class="card-head">
+        <h2>Composição do patrimônio</h2>
+        <span class="card-head-hint">por tipo de conta</span>
+      </div>
+      <div id="composicaoList" class="composicao-list"></div>
+    </section>
+
+    <!-- Chart -->
+    <section class="card chart-card" aria-label="Gráfico">
+      <div class="card-head">
+        <h2>Receitas x Despesas</h2>
+        <span class="card-head-hint">últimos 6 meses</span>
+      </div>
+      <canvas id="chartCanvas" height="200"></canvas>
+      <div class="legend">
+        <span><i class="dot dot-income"></i> Receitas</span>
+        <span><i class="dot dot-expense"></i> Despesas</span>
+      </div>
+    </section>
+
+    <!-- Últimas movimentações + categorias com maior gasto -->
+    <section class="dashboard-widgets">
+      <div class="card widget-card" aria-label="Últimas movimentações">
+        <div class="card-head">
+          <h2>Últimas movimentações</h2>
+        </div>
+        <div id="ultimasMovList" class="mini-list"></div>
+      </div>
+      <div class="card widget-card" aria-label="Categorias com maior gasto">
+        <div class="card-head">
+          <h2>Categorias com maior gasto</h2>
+          <span class="card-head-hint">este mês</span>
+        </div>
+        <div id="topCategoriasList" class="mini-list"></div>
+      </div>
+    </section>
+
+    <!-- Previsão do mês -->
+    <section class="card" id="previsaoCard" aria-label="Previsão do mês">
+      <div class="card-head">
+        <h2>Previsão do mês</h2>
+        <span class="card-head-hint" id="previsaoHint"></span>
+      </div>
+      <div id="previsaoContent" class="previsao-grid">
+        <div class="previsao-item">
+          <span class="previsao-label">Previsão de saldo ao fim do mês</span>
+          <span id="previsaoSaldoFinal" class="previsao-value">R$ 0,00</span>
+        </div>
+        <div class="previsao-item">
+          <span class="previsao-label">Quanto ainda posso gastar</span>
+          <span id="previsaoPodeGastar" class="previsao-value income">R$ 0,00</span>
+        </div>
+        <div class="previsao-item">
+          <span class="previsao-label">Economia prevista</span>
+          <span id="previsaoEconomia" class="previsao-value">R$ 0,00</span>
+        </div>
+      </div>
+      <div id="previsaoEmpty" class="empty-state" hidden>
+        <p>Ainda não há lançamentos suficientes este mês para gerar uma previsão.</p>
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <section class="toolbar">
+      <button id="btnNovo" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Nova movimentação
+      </button>
+
+      <div class="toolbar-filters">
+        <select id="filterPeriod" class="input" aria-label="Filtrar por período">
+          <option value="mes" selected>Este mês</option>
+          <option value="hoje">Hoje</option>
+          <option value="semana">Esta semana</option>
+          <option value="ano">Este ano</option>
+          <option value="todos">Todo o período</option>
+          <option value="personalizado">Período personalizado</option>
+        </select>
+        <div id="customPeriodWrap" class="custom-period" hidden>
+          <input type="date" id="filterDateStart" class="input" aria-label="De">
+          <span class="period-sep">até</span>
+          <input type="date" id="filterDateEnd" class="input" aria-label="Até">
+        </div>
+        <select id="filterCategory" class="input" aria-label="Filtrar por categoria">
+          <option value="">Todas categorias</option>
+        </select>
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" class="search-icon"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M20 20L16.5 16.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input type="text" id="filterSearch" class="input" placeholder="Pesquisar por nome, categoria ou valor...">
+        </div>
+      </div>
+    </section>
+
+    <!-- Receitas -->
+    <section class="card table-card" aria-label="Receitas">
+      <div class="card-head">
+        <h2><span class="dot dot-income"></span> Receitas</h2>
+        <span id="countReceitas" class="card-head-hint">0 lançamentos</span>
+      </div>
+
+      <div class="table-wrap">
+        <table id="tableReceitas">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th class="col-right">Valor</th>
+              <th class="col-actions">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tableBodyReceitas"></tbody>
+        </table>
+      </div>
+
+      <div id="emptyReceitas" class="empty-state" hidden>
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M3 10H21" stroke="currentColor" stroke-width="1.4"/><path d="M8 3V6M16 3V6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <p>Nenhuma receita por aqui ainda.</p>
+        <button class="btn btn-ghost" id="emptyReceitasBtn">Adicionar receita</button>
+      </div>
+    </section>
+
+    <!-- Despesas -->
+    <section class="card table-card" aria-label="Despesas">
+      <div class="card-head">
+        <h2><span class="dot dot-expense"></span> Despesas</h2>
+        <span id="countDespesas" class="card-head-hint">0 lançamentos</span>
+      </div>
+
+      <div class="table-wrap">
+        <table id="tableDespesas">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Descrição</th>
+              <th>Categoria</th>
+              <th class="col-right">Valor</th>
+              <th class="col-actions">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tableBodyDespesas"></tbody>
+        </table>
+      </div>
+
+      <div id="emptyDespesas" class="empty-state" hidden>
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M3 10H21" stroke="currentColor" stroke-width="1.4"/><path d="M8 3V6M16 3V6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <p>Nenhuma despesa por aqui ainda.</p>
+        <button class="btn btn-ghost" id="emptyDespesasBtn">Adicionar despesa</button>
+      </div>
+    </section>
+
+   </div>
+
+   <div id="viewContas" class="view" hidden>
+    <section class="card" aria-label="Nova conta">
+      <div class="card-head">
+        <h2>Contas</h2>
+        <span class="card-head-hint">todo lançamento pertence a uma conta</span>
+      </div>
+      <form id="accountForm" class="invest-form">
+        <input type="hidden" id="accountId">
+        <div class="field-row">
+          <label class="field">
+            <span>Nome da conta</span>
+            <input type="text" id="accountNome" required placeholder="Ex: Nubank, Banco do Brasil, Carteira...">
+          </label>
+          <label class="field">
+            <span>Saldo inicial (R$)</span>
+            <input type="number" id="accountSaldoInicial" step="0.01" value="0">
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Ícone</span>
+            <select id="accountIcone">
+              <option value="carteira">Carteira</option>
+              <option value="banco">Banco</option>
+              <option value="dinheiro">Dinheiro</option>
+              <option value="investimento">Investimento</option>
+              <option value="cartao">Cartão</option>
+              <option value="outro">Outro</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Cor</span>
+            <input type="color" id="accountCor" value="#1F6F5C" class="color-input">
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary invest-submit" id="accountSubmitBtn">Adicionar conta</button>
+      </form>
+    </section>
+
+    <section class="card" aria-label="Lista de contas">
+      <div class="card-head">
+        <h2>Suas contas</h2>
+        <span id="accountCount" class="card-head-hint">0 contas</span>
+      </div>
+      <div id="accountList" class="item-list"></div>
+      <div id="emptyAccounts" class="empty-state" hidden>
+        <p>Nenhuma conta cadastrada ainda.</p>
+      </div>
+    </section>
+   </div>
+
+   <div id="viewRecorrentes" class="view" hidden>
+    <section class="card" id="suggestionsCard" aria-label="Sugestões de recorrência" hidden>
+      <div class="card-head">
+        <h2>Sugestões</h2>
+        <span class="card-head-hint">detectamos padrões nos últimos 3 meses</span>
+      </div>
+      <div id="suggestionsList" class="suggestions-list"></div>
+    </section>
+
+    <section class="card" aria-label="Nova despesa recorrente">
+      <div class="card-head">
+        <h2>Despesas recorrentes</h2>
+        <span class="card-head-hint">lançadas automaticamente todo mês</span>
+      </div>
+      <form id="recForm" class="invest-form">
+        <input type="hidden" id="recId">
+        <div class="segmented" id="recTypeSegment">
+          <button type="button" class="segment active" data-type="despesa">Despesa</button>
+          <button type="button" class="segment" data-type="receita">Receita</button>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Descrição</span>
+            <input type="text" id="recDesc" required placeholder="Ex: Netflix, Academia, Internet...">
+          </label>
+          <label class="field">
+            <span>Valor (R$)</span>
+            <input type="number" id="recValor" min="0" step="0.01" required>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Categoria</span>
+            <select id="recCategoria" required></select>
+          </label>
+          <label class="field">
+            <span>Dia do mês</span>
+            <input type="number" id="recDia" min="1" max="28" value="5" required>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Conta</span>
+            <select id="recConta" required></select>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary invest-submit" id="recSubmitBtn">Adicionar recorrência</button>
+      </form>
+    </section>
+
+    <section class="card" aria-label="Lista de recorrências">
+      <div class="card-head">
+        <h2>Ativas</h2>
+        <span id="recCount" class="card-head-hint">0 recorrências</span>
+      </div>
+      <div id="recList" class="item-list"></div>
+      <div id="emptyRec" class="empty-state" hidden>
+        <p>Nenhuma despesa recorrente cadastrada ainda.</p>
+      </div>
+    </section>
+   </div>
+
+   <div id="viewCartao" class="view" hidden>
+    <section class="card" aria-label="Novo cartão">
+      <div class="card-head">
+        <h2>Cartões de crédito</h2>
+        <span class="card-head-hint">acompanhe limite e fatura</span>
+      </div>
+      <form id="cardForm" class="invest-form">
+        <input type="hidden" id="cardId">
+        <div class="field-row">
+          <label class="field">
+            <span>Nome do cartão</span>
+            <input type="text" id="cardNome" required placeholder="Ex: Nubank, Inter...">
+          </label>
+          <label class="field">
+            <span>Limite (R$)</span>
+            <input type="number" id="cardLimite" min="0" step="0.01" required>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Valor utilizado (R$)</span>
+            <input type="number" id="cardUsado" min="0" step="0.01" value="0">
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Dia de fechamento</span>
+            <input type="number" id="cardFechamento" min="1" max="31" placeholder="Ex: 20">
+          </label>
+          <label class="field">
+            <span>Dia de vencimento</span>
+            <input type="number" id="cardVencimento" min="1" max="31" placeholder="Ex: 27">
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary invest-submit" id="cardSubmitBtn">Adicionar cartão</button>
+      </form>
+    </section>
+
+    <section class="card" aria-label="Lista de cartões">
+      <div class="card-head">
+        <h2>Seus cartões</h2>
+        <span id="cardCount" class="card-head-hint">0 cartões</span>
+      </div>
+      <div id="cardList" class="item-list"></div>
+      <div id="emptyCards" class="empty-state" hidden>
+        <p>Nenhum cartão cadastrado ainda.</p>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Nova dívida">
+      <div class="card-head">
+        <h2>Outras dívidas</h2>
+        <span class="card-head-hint">empréstimos, financiamentos etc.</span>
+      </div>
+      <form id="debtForm" class="invest-form">
+        <input type="hidden" id="debtId">
+        <div class="field-row">
+          <label class="field">
+            <span>Nome</span>
+            <input type="text" id="debtNome" required placeholder="Ex: Empréstimo consignado, Financiamento do carro...">
+          </label>
+          <label class="field">
+            <span>Valor devido (R$)</span>
+            <input type="number" id="debtValor" min="0" step="0.01" required>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary invest-submit" id="debtSubmitBtn">Adicionar dívida</button>
+      </form>
+    </section>
+
+    <section class="card" aria-label="Lista de dívidas">
+      <div class="card-head">
+        <h2>Dívidas cadastradas</h2>
+        <span id="debtCount" class="card-head-hint">0 dívidas</span>
+      </div>
+      <div id="debtList" class="item-list"></div>
+      <div id="emptyDebts" class="empty-state" hidden>
+        <p>Nenhuma dívida cadastrada.</p>
+      </div>
+    </section>
+   </div>
+
+   <div id="viewMetas" class="view" hidden>
+    <section class="card" aria-label="Nova meta">
+      <div class="card-head">
+        <h2>Metas financeiras</h2>
+        <span class="card-head-hint">acompanhe seu progresso</span>
+      </div>
+      <form id="goalForm" class="invest-form">
+        <input type="hidden" id="goalId">
+        <div class="field-row">
+          <label class="field">
+            <span>Nome da meta</span>
+            <input type="text" id="goalNome" required placeholder="Ex: Notebook, Viagem, Moto...">
+          </label>
+          <label class="field">
+            <span>Valor alvo (R$)</span>
+            <input type="number" id="goalAlvo" min="0.01" step="0.01" required>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Valor já guardado (R$)</span>
+            <input type="number" id="goalAtual" min="0" step="0.01" value="0">
+          </label>
+          <label class="field">
+            <span>Prazo (opcional)</span>
+            <input type="date" id="goalPrazo">
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary invest-submit" id="goalSubmitBtn">Adicionar meta</button>
+      </form>
+    </section>
+
+    <section class="card" aria-label="Lista de metas">
+      <div class="card-head">
+        <h2>Suas metas</h2>
+        <span id="goalCount" class="card-head-hint">0 metas</span>
+      </div>
+      <div id="goalList" class="item-list"></div>
+      <div id="emptyGoals" class="empty-state" hidden>
+        <p>Nenhuma meta cadastrada ainda.</p>
+      </div>
+    </section>
+   </div>
+
+   <div id="viewOrcamento" class="view" hidden>
+    <section class="card" aria-label="Novo orçamento">
+      <div class="card-head">
+        <h2>Orçamento mensal</h2>
+        <span class="card-head-hint">um limite por categoria</span>
+      </div>
+      <form id="budgetForm" class="invest-form">
+        <input type="hidden" id="budgetId">
+        <div class="field-row">
+          <label class="field">
+            <span>Categoria</span>
+            <select id="budgetCategoria" required></select>
+          </label>
+          <label class="field">
+            <span>Limite mensal (R$)</span>
+            <input type="number" id="budgetLimite" min="0.01" step="0.01" required>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary invest-submit" id="budgetSubmitBtn">Adicionar orçamento</button>
+      </form>
+    </section>
+
+    <section class="card" aria-label="Lista de orçamentos">
+      <div class="card-head">
+        <h2>Acompanhamento do mês</h2>
+        <span id="budgetCount" class="card-head-hint">0 orçamentos</span>
+      </div>
+      <div id="budgetList" class="item-list"></div>
+      <div id="emptyBudgets" class="empty-state" hidden>
+        <p>Nenhum orçamento cadastrado ainda.</p>
+      </div>
+    </section>
+   </div>
+
+   <div id="viewInsights" class="view" hidden>
+    <section class="card" aria-label="Insights financeiros">
+      <div class="card-head">
+        <h2>Insights</h2>
+        <span class="card-head-hint">gerados automaticamente a partir dos seus lançamentos</span>
+      </div>
+      <div id="insightsList" class="insight-list"></div>
+    </section>
+   </div>
+
+   <div id="viewResumo" class="view" hidden>
+    <section class="card" aria-label="Resumo do mês">
+      <div class="card-head">
+        <h2>Resumo do mês</h2>
+        <input type="month" id="resumoMesInput" class="input">
+      </div>
+
+      <div class="previsao-grid resumo-stats">
+        <div class="previsao-item">
+          <span class="previsao-label">Total recebido</span>
+          <span id="resumoReceitas" class="previsao-value income">R$ 0,00</span>
+        </div>
+        <div class="previsao-item">
+          <span class="previsao-label">Total gasto</span>
+          <span id="resumoDespesas" class="previsao-value expense">R$ 0,00</span>
+        </div>
+        <div class="previsao-item">
+          <span class="previsao-label">Economia</span>
+          <span id="resumoEconomia" class="previsao-value">R$ 0,00</span>
+        </div>
+        <div class="previsao-item">
+          <span class="previsao-label">Movimentações</span>
+          <span id="resumoQuantidade" class="previsao-value">0</span>
+        </div>
+      </div>
+
+      <div class="resumo-evolucao">
+        <h3>Evolução em relação ao mês anterior</h3>
+        <div id="resumoEvolucaoList" class="evolucao-list"></div>
+      </div>
+
+      <p class="invest-disclaimer" id="resumoMediaHint"></p>
+    </section>
+
+    <section class="card" aria-label="Destaques do mês">
+      <div class="card-head">
+        <h2>Destaques</h2>
+      </div>
+      <div id="resumoDestaques" class="resumo-destaques"></div>
+    </section>
+
+    <section class="card" aria-label="Categorias mais utilizadas">
+      <div class="card-head">
+        <h2>Categorias mais utilizadas</h2>
+        <span class="card-head-hint">por número de lançamentos</span>
+      </div>
+      <div id="resumoCategoriasUsadas" class="mini-list"></div>
+    </section>
+   </div>
+
+   <div id="viewInvestimentos" class="view" hidden>
+    <section class="card invest-card" aria-label="Simulador de investimentos">
+      <div class="card-head">
+        <h2>Simulador de investimentos</h2>
+        <span class="card-head-hint">projeção mês a mês</span>
+      </div>
+
+      <form id="investForm" class="invest-form">
+
+        <label class="field">
+          <span>Tipo de investimento</span>
+          <select id="investTipo">
+            <option value="cdb">CDB</option>
+            <option value="tesouro_selic">Tesouro Selic</option>
+            <option value="tesouro_pre">Tesouro Prefixado</option>
+            <option value="tesouro_ipca">Tesouro IPCA+</option>
+            <option value="acoes">Bolsa de valores (ações)</option>
+          </select>
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span>Valor inicial (R$)</span>
+            <input type="number" id="investValorInicial" min="0" step="0.01" value="1000">
+          </label>
+          <label class="field">
+            <span>Aporte mensal (R$)</span>
+            <input type="number" id="investAporte" min="0" step="0.01" value="0">
+          </label>
+        </div>
+
+        <!-- Campos dinâmicos por tipo -->
+        <div class="field-row" data-mode="cdi">
+          <label class="field">
+            <span>Taxa CDI (% a.a.)</span>
+            <input type="number" id="investCdiTaxa" min="0" step="0.01" value="10.75">
+          </label>
+          <label class="field">
+            <span>% do CDI contratado</span>
+            <input type="number" id="investCdiPercentual" min="0" step="1" value="100">
+          </label>
+        </div>
+
+        <div class="field-row" data-mode="annual">
+          <label class="field">
+            <span>Taxa contratada (% a.a.)</span>
+            <input type="number" id="investTaxaAnual" min="0" step="0.01" value="11">
+          </label>
+        </div>
+
+        <div class="field-row" data-mode="ipca">
+          <label class="field">
+            <span>IPCA estimado (% a.a.)</span>
+            <input type="number" id="investIpca" min="0" step="0.01" value="4.5">
+          </label>
+          <label class="field">
+            <span>Taxa prefixada + IPCA (% a.a.)</span>
+            <input type="number" id="investIpcaSpread" min="0" step="0.01" value="6">
+          </label>
+        </div>
+
+        <div class="field-row" data-mode="monthly">
+          <label class="field">
+            <span>Retorno esperado (% ao mês)</span>
+            <input type="number" id="investMensal" step="0.01" value="1">
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label class="field">
+            <span>Período (meses)</span>
+            <input type="number" id="investMeses" min="1" step="1" value="12">
+          </label>
+          <div class="field invest-ir-field">
+            <span>Imposto de renda</span>
+            <label class="checkbox-line">
+              <input type="checkbox" id="investIR" checked>
+              <span>Descontar IR (renda fixa)</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary invest-submit">Calcular rendimento</button>
+      </form>
+    </section>
+
+    <section id="investResults" class="card invest-results" hidden>
+      <div class="card-head">
+        <h2>Resultado da simulação</h2>
+        <span id="investResumoHint" class="card-head-hint"></span>
+      </div>
+
+      <div class="invest-summary">
+        <div class="invest-stat">
+          <span class="invest-stat-label">Valor final bruto</span>
+          <span id="investFinalBruto" class="invest-stat-value">R$ 0,00</span>
+        </div>
+        <div class="invest-stat" id="investIRStat">
+          <span class="invest-stat-label">IR descontado</span>
+          <span id="investIRValor" class="invest-stat-value expense">R$ 0,00</span>
+        </div>
+        <div class="invest-stat">
+          <span class="invest-stat-label">Valor final líquido</span>
+          <span id="investFinalLiquido" class="invest-stat-value income">R$ 0,00</span>
+        </div>
+        <div class="invest-stat">
+          <span class="invest-stat-label">Rendimento do último mês</span>
+          <span id="investUltimoMes" class="invest-stat-value income">R$ 0,00</span>
+        </div>
+      </div>
+
+      <div class="table-wrap invest-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th class="col-right">Aporte</th>
+              <th class="col-right">Rendimento</th>
+              <th class="col-right">Saldo acumulado</th>
+            </tr>
+          </thead>
+          <tbody id="investTableBody"></tbody>
+        </table>
+      </div>
+
+      <p class="invest-disclaimer">Simulação simplificada, apenas para referência — não considera variações reais de mercado, taxas de custódia/administração ou mudanças na Selic e no CDI ao longo do tempo.</p>
+    </section>
+   </div>
+
+  </main>
+</div>
+
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <h2 id="modalTitle">Nova movimentação</h2>
+      <button class="icon-btn" id="modalClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <form id="entryForm">
+      <input type="hidden" id="entryId">
+
+      <div class="segmented" id="typeSegment">
+        <button type="button" class="segment active" data-type="despesa">Despesa</button>
+        <button type="button" class="segment" data-type="receita">Receita</button>
+      </div>
+
+      <label class="field">
+        <span>Descrição</span>
+        <input type="text" id="entryDesc" required placeholder="Ex: Supermercado, Salário...">
+      </label>
+
+      <div class="field-row">
+        <label class="field">
+          <span>Valor</span>
+          <input type="number" id="entryValor" required min="0" step="0.01" placeholder="0,00">
+        </label>
+        <label class="field">
+          <span>Data</span>
+          <input type="date" id="entryData" required>
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Categoria</span>
+        <select id="entryCategoria" required></select>
+      </label>
+
+      <label class="field">
+        <span>Conta</span>
+        <select id="entryConta" required></select>
+      </label>
+
+      <label class="field">
+        <span>Comprovante (opcional)</span>
+        <input type="file" id="entryComprovanteInput" accept="image/*">
+      </label>
+      <div id="comprovantePreviewWrap" class="comprovante-preview" hidden>
+        <img id="comprovantePreviewImg" alt="Comprovante anexado">
+        <button type="button" class="btn btn-ghost" id="comprovanteRemoveBtn">Remover comprovante</button>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="btnCancelar">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="btnSalvar">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<!-- Lightbox de comprovante -->
+<div id="lightboxOverlay" class="modal-overlay lightbox-overlay" hidden>
+  <div class="lightbox-content">
+    <button id="lightboxClose" class="icon-btn lightbox-close" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <img id="lightboxImg" alt="Comprovante ampliado">
+  </div>
+</div>
+
+<!-- Backup e restauração -->
+<div id="backupOverlay" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="backupTitle">
+    <div class="modal-head">
+      <h2 id="backupTitle">Backup e restauração</h2>
+      <button class="icon-btn" id="backupClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="backup-info">
+      <div class="backup-info-row"><span>Último backup</span><strong id="backupLastDate">Nunca realizado</strong></div>
+      <div class="backup-info-row"><span>Versão do backup</span><strong id="backupLastVersion">—</strong></div>
+      <div class="backup-info-row"><span>Registros no último backup</span><strong id="backupLastCount">—</strong></div>
+    </div>
+
+    <p class="backup-current-hint" id="backupCurrentHint"></p>
+
+    <button type="button" class="btn btn-primary invest-submit" id="backupExportBtn">Exportar backup (.json)</button>
+
+    <div class="backup-divider"><span>ou</span></div>
+
+    <label class="btn btn-ghost invest-submit backup-import-label" for="backupImportInput">Importar backup</label>
+    <input type="file" id="backupImportInput" accept="application/json,.json" hidden>
+
+    <p class="invest-disclaimer">Importar um backup substitui todos os perfis e dados salvos neste navegador pelos dados do arquivo. Essa ação não pode ser desfeita.</p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
